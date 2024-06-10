@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int    @id @default(autoincrement())
+  name         String
+  email        String @unique
+  passwordHash String @map("password_hash")
+  token        String
+  stateId      Int    @map("state_id")
+  state        State  @relation(fields: [stateId], references: [id])
+  Ads          Ads[]
+
+  @@map("users")
+}
+
+model State {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  User User[]
+
+  @@map("states")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+  slug String
+  Ads  Ads[]
+
+  @@map("categories")
+}
+
+model Ads {
+  id              Int      @id @default(autoincrement())
+  images          Image[]
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  title           String
+  categoryId      Int
+  category  Category @relation(fields: [categoryId], references: [id])
+  price           Float
+  priceNegotiable Boolean  @default(true)
+  description     String
+  views           Int
+  status          Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("ads")
+}
+
+model Image {
+  id      Int     @id @default(autoincrement())
+  url     String
+  default Boolean
+  adId    Int
+  ad      Ads     @relation(fields: [adId], references: [id])
+
+  @@map("images")
+}

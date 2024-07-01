@@ -57,3 +57,11 @@ export const findUserByToken = async (token) => {
     where: { token },
   });
 };
+
+export const findUserById = async (id) => {
+  return await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+};

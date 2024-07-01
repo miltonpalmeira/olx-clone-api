@@ -58,3 +58,38 @@ export const findAdById = async (id) => {
     throw new Error(`Failed to get ad by id: ${error.message}`);
   }
 };
+
+export const updateAd = async (id, data) => {
+  try {
+    return await prisma.ads.update({
+      where: { id },
+      data: {
+        title: data.title,
+        userId: data.userId,
+        categoryId: data.categoryId,
+        price: data.price,
+        priceNegotiable: data.priceNegotiable,
+        description: data.description,
+        views: data.views || 0,
+        status: data.status !== undefined ? data.status : true,
+        images: {
+          create: data.images || [],
+        },
+      },
+    });
+  } catch (error) {
+    throw new Error(`Failed to update ads: ${error.message}`);
+  }
+};
+
+export const deleteAd = async (id) => {
+  try {
+    return await prisma.ads.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    throw new Error(`Failed to delete ads: ${error.message}`);
+  }
+};

@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { authPrivate } from '../middlewares/Auth.js';
-import { getCategories } from '../controllers/AdController.js';
+import { getCategories, create, getList, getItem } from '../controllers/AdController.js';
 
 const router = Router();
 
-// router.post('/ads/add', authPrivate, create);
-// router.get('/ads/list', getList);
-// router.get('/ad/:id', getItem);
+router.post('/ads/add', authPrivate, create);
+router.get('/ads/list', getList);
+router.get('/ad/:id', getItem);
 // Enviando imagens, será POST
 // router.post('/ad/:id', authPrivate, update);
 
